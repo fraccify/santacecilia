@@ -454,7 +454,7 @@ select:focus {
   }
 
 .dropdown-title{
-  color: #013E6A;
+  color: #0271CD;
   padding: 10px 15px
   }
   #loader {
@@ -803,7 +803,7 @@ summary::before {
 .tituloavdp {
   margin-top: 0;
   text-align: center;
-  color: #0178d2;
+  color: #0271CD;
 }
 
 .contenedoradmin{
@@ -824,7 +824,7 @@ summary::before {
 }
 
 .tituloavisos{
-  color:  #0178d2;
+  color:  #0271CD;
 }
 
 
