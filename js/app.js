@@ -1844,3 +1844,10 @@ function actualizarHoras() {
         document.getElementById("horaFin").disabled = false;
     }
 }
+
+function onClick(e) {
+    e.preventDefault();
+    grecaptcha.enterprise.ready(async () => {
+      const token = await grecaptcha.enterprise.execute('6LcLXtYpAAAAAGb-FTuihdumnp4HmqdLVjwH-Qds', {action: 'LOGIN'});
+    });
+}
