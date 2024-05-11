@@ -65,7 +65,7 @@ const fechavisita3Span = document.getElementById("fechavisita3");
 const domdvisistaSpan = document.getElementById("domdvisista");
 const divpagocargado = document.getElementById("pagocargado");
 const divseguridad = document.getElementById("seguridad");
-
+const sheetID = "c42cf9f0-aad0-4079-ad6f-7baed9fc22f9";
 
 
 
@@ -115,7 +115,8 @@ formulario.addEventListener("submit", (e) => {
         // Función para obtener los datos del API y agregar los registros
         function obtenerYAgregarRegistros2() {
             console.log("actualizando");
-            fetch("https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/visitas")
+            const ulrvisitas = `https://sheet.best/api/sheets/${sheetID}/tabs/visitas`
+            fetch(ulrvisitas)
                 .then((response) => response.json())
                 .then((data) => {
                     console.log(data); // Imprime los datos obtenidos desde la API
@@ -200,8 +201,9 @@ formulario.addEventListener("submit", (e) => {
         obtenerYAgregarRegistros2();
 
     } else {
-        fetch("https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/propietarios")
-            //actualización
+        const urlProp = `https://sheet.best/api/sheets/${sheetID}/tabs/propietarios`;
+        fetch(urlProp)
+             //actualización
             .then((response) => response.json())
             .then((data) => {
 
@@ -294,7 +296,7 @@ formulario.addEventListener("submit", (e) => {
                                 dom: domiciliocod,
                             };
                             
-                            const urlregistro = "https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/registros";
+                            const urlregistro = `https://sheet.best/api/sheets/${sheetID}/tabs/registros`;
                             const opciones = {
                                 method: "POST",
                                 headers: {
@@ -338,8 +340,9 @@ formulario.addEventListener("submit", (e) => {
                                 segurichat.style.display = "none";
                                 divregreso.style.display = "block";
                                 console.log(indice);
-                            
-                                fetch("https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/propietarios")
+
+                                const urlProp = `https://sheet.best/api/sheets/${sheetID}/tabs/propietarios`;
+                                fetch(urlProp)
                                     .then((response) => response.json())
                                     .then((data) => {
                                         ene2024Span.textContent = (data[indice].ene2024);
@@ -480,7 +483,7 @@ formulario.addEventListener("submit", (e) => {
                                                     
                                 if (statuscod === "Al Corriente") {
                                     
-                                    const url = "https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/reservaciones";
+                                    const url = `https://sheet.best/api/sheets/${sheetID}/tabs/reservaciones`;
                                     const opciones = {
                                         method: "POST",
                                         headers: {
@@ -532,7 +535,7 @@ formulario.addEventListener("submit", (e) => {
                             }
                             
                             function verificarDisponibilidad(fecha, tiporeserva) {
-                                const url = "https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/reservaciones";
+                                const url = `https://sheet.best/api/sheets/${sheetID}/tabs/reservaciones`;
                                 
                                 // Realizar una consulta para obtener los registros en la misma fecha y amenidad
                                 return fetch(url)
@@ -562,7 +565,8 @@ formulario.addEventListener("submit", (e) => {
                             function toggleMisReservas() {
                                 console.log("actualizándose")
                                 const domicilio = domicilioSpan.textContent;
-                                fetch("https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/reservaciones")
+                                const urlmisreservas = `https://sheet.best/api/sheets/${sheetID}/tabs/reservaciones`
+                                fetch(urlmisreservas)
                                     .then((response) => response.json())
                                     .then((data) => {
                                         console.log(domiciliocod);
@@ -623,7 +627,7 @@ formulario.addEventListener("submit", (e) => {
                                     Tipo: tipoSpan,
                                 };
                             
-                                const url = "https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/visitas";
+                                const url = `https://sheet.best/api/sheets/${sheetID}/tabs/visitas`;
                             
                                 const opciones = {
                                     method: "POST",
@@ -701,7 +705,7 @@ formulario.addEventListener("submit", (e) => {
                                 
                             function eliminarreservacion(amenidad, fecha, domiciliocod) {
                                 // Obtener la URL de la API
-                                const apiURL = "https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/reservaciones";
+                                const apiURL = `https://sheet.best/api/sheets/${sheetID}/tabs/reservaciones`;
                                 
                                 // Realizar una solicitud GET para obtener los datos de la hoja de cálculo
                                 fetch(apiURL)
@@ -880,112 +884,142 @@ formulario.addEventListener("submit", (e) => {
                                     alert("Domicilio con adeudo, actualmente no tiene derecho al ingreso de visitas o proveedores");
                                 }
                             }
-
-
-
-                            ///
                             function enviardatospago() { 
 
                                 if (boton3.disabled) {
                                     return; // Evitar ejecutar la función si ya está en curso
                                 }
                                 desactivarBoton(); // Desactivar el botón al inicio de la función
+                                let fechaPagoSpan = document.getElementById("fechaPago").textContent;
+                                let montoPagoSpan = document.getElementById("montoPago").textContent;
+                                let beneficiarioPagoSpan = document.getElementById("beneficiarioPago").textContent;
+                                let conceptodelpagoPagoSpan = document.getElementById("conceptodelpago").textContent;
+                                let clavederastreoSpan = document.getElementById("clavederastreo").textContent;
+                                let fechaHoraActual = new Date();
+                                let fechaHoraFormateada = fechaHoraActual.toLocaleString();
+                                let mesPagoSelect = document.getElementById("mespago").value;
+                                const inputArchivo = document.getElementById("archivo");
 
-
-                                const fechaPagoSpan = document.getElementById("fechaPago").textContent;
-                                const montoPagoSpan = document.getElementById("montoPago").textContent;
-                                const beneficiarioPagoSpan = document.getElementById("beneficiarioPago").textContent;
-                                const conceptodelpagoPagoSpan = document.getElementById("conceptodelpago").textContent;
-                                const clavederastreoSpan = document.getElementById("clavederastreo").textContent;
-                                const fechaHoraActual = new Date();
-                                const fechaHoraFormateada = fechaHoraActual.toLocaleString();
-                                const mesPagoSelect = document.getElementById("mespago");
-                                const selectedOptions = Array.from(mesPagoSelect.options).filter(option => option.selected).map(option => option.value);
-                                console.log(selectedOptions);
                                 
                                 // Verificar si el pago ya ha sido aplicado
 
-                                const urlVerificacion = `https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/pagos/clavederastreo/${encodeURIComponent(clavederastreoSpan)}`;
+                                const urlVerificacion = `https://sheet.best/api/sheets/${sheetID}/tabs/pagos/clavederastreo/${encodeURIComponent(clavederastreoSpan)}`;
                                 console.log(urlVerificacion);
-                                
-                                
-                                fetch(urlVerificacion)
-                                    .then((response) => response.json())
-                                    .then((data) => {
-                                        console.log(data)
-                                        console.log(data.length)
 
+                                if (mesPagoSelect=== "") {
+                                    alert("Debe selecionar el mes al que desea que se aplique su pago")
+                                    timer = setTimeout(activarBoton, tiempoEspera);
 
-                                        if (data.length > 0) {
-                                            // Pago ya registrado, mostrar alerta
-                                            alert("Este comprobante ya no se puede volver a ocupar");
-
-                                            document.getElementById("fechaPago").value = "";
-                                            document.getElementById("montoPago").value = "";
-                                            document.getElementById("beneficiarioPago").value = "";
-                                            document.getElementById("conceptodelpago").value = "";
-                                            document.getElementById("clavederastreo").value = "";
-                                            divpagocargado.style.display = "none";
-
-
-                                        } else {
-                                            // Pago no registrado, proceder a enviar los datos
-                                            enviarDatos();
-
-                                            alert("Tu pago fue enviado, se procedera a su revisión y aplicación")
-                                            document.getElementById("fechaPago").value = "";
-                                            document.getElementById("montoPago").value = "";
-                                            document.getElementById("beneficiarioPago").value = "";
-                                            document.getElementById("conceptodelpago").value = "";
-                                            document.getElementById("clavederastreo").value = "";
-                                            divpagocargado.style.display = "none";
-
-
-                                        }
-                                    })
-                                    .catch((error) => {
-                                        console.error("Error al verificar los datos", error);
-                                    });
-                            
-                                function enviarDatos() {
-                                    const datos = {
-                                        registro: fechaHoraFormateada,
-                                        dom: domiciliocod,
-                                        nombre: clientecod,
-                                        domds: domicilio,
-                                        beneficiario: beneficiarioPagoSpan,
-                                        fechapago: fechaPagoSpan,
-                                        monto: montoPagoSpan,
-                                        concepto: conceptodelpagoPagoSpan,
-                                        aplicarpara : selectedOptions,
-                                        clavederastreo : clavederastreoSpan,
-                                    };
-    
-                            
-                                    const url = "https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/pagos";
-                                    const opciones = {
-                                        method: "POST",
-                                        headers: {
-                                            "Content-Type": "application/json"
-                                        },
-                                        body: JSON.stringify(datos)
-                                    };
-                            
-                                    fetch(url, opciones)
+                                } else {
+                                    fetch(urlVerificacion)
                                         .then((response) => response.json())
                                         .then((data) => {
-                                            // Lógica después de enviar datos
+                                            console.log(data)
+                                            console.log(data.length)
+
+                                            if (data.length > 0) {
+                                                // Pago ya registrado, mostrar alerta
+                                                alert("Este comprobante ya no se puede volver a ocupar");
+                                                timer = setTimeout(activarBoton, tiempoEspera);
+
+
+                                                document.getElementById("fechaPago").value = "";
+                                                document.getElementById("montoPago").value = "";
+                                                document.getElementById("beneficiarioPago").value = "";
+                                                document.getElementById("conceptodelpago").value = "";
+                                                document.getElementById("clavederastreo").value = "";
+                                                inputArchivo.value = "";
+
+                                                divpagocargado.style.display = "none";
+
+                                            } else {
+                                                // Pago no registrado, proceder a enviar los datos
+                                                grabarpago();
+                                                enviarDatos();
+
+                                                alert("Pago por " + montoPagoSpan +" aplicado a " + mesPagoSelect)
+
+
+                                                
+                                                document.getElementById("fechaPago").value = "";
+                                                document.getElementById("montoPago").value = "";
+                                                document.getElementById("beneficiarioPago").value = "";
+                                                document.getElementById("conceptodelpago").value = "";
+                                                document.getElementById("clavederastreo").value = "";
+                                                divpagocargado.style.display = "none";
+                                                timer = setTimeout(activarBoton, tiempoEspera);
+                                            }
                                         })
                                         .catch((error) => {
-                                            console.error("Error al enviar los datos a la hoja de cálculo", error);
+                                            console.error("Error al verificar los datos", error);
                                         });
+                                
+                                    function enviarDatos() {
+                                        const datos = {
+                                            registro: fechaHoraFormateada,
+                                            dom: domiciliocod,
+                                            nombre: clientecod,
+                                            domds: domicilio,
+                                            beneficiario: beneficiarioPagoSpan,
+                                            fechapago: fechaPagoSpan,
+                                            monto: montoPagoSpan,
+                                            concepto: conceptodelpagoPagoSpan,
+                                            aplicarpara : mesPagoSelect,
+                                            clavederastreo : clavederastreoSpan,
+                                        };
+        
+                                
+                                        const url = `https://sheet.best/api/sheets/${sheetID}/tabs/pagos`;
+                                        const opciones = {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json"
+                                            },
+                                            body: JSON.stringify(datos)
+                                        };
+                                
+                                        fetch(url, opciones)
+                                            .then((response) => response.json())
+                                            .then((data) => {
+                                                // Lógica después de enviar datos
+                                            })
+                                            .catch((error) => {
+                                                console.error("Error al enviar los datos a la hoja de cálculo", error);
+                                            });
+                                    }
+
+                                    function grabarpago(){
+
+                                        console.log("el indice es");
+                                        console.log(indice);
+
+
+                                        const pagoaplicado ={
+                                            [mesPagoSelect]: montoPagoSpan,
+                                        }
+                                        const url = `https://sheet.best/api/sheets/${sheetID}/tabs/propietarios/${indice}`;
+                                        console.log("URL:", url);
+                                        // Realizar la solicitud PATCH para actualizar los datos
+                                        fetch(url, {
+                                            method: "PATCH",
+                                            mode: "cors",
+                                            headers: {
+                                                "Content-Type": "application/json"
+                                            },
+                                            body: JSON.stringify(pagoaplicado)
+                                                })
+                                            .then((response) => response.json())
+                                            .then((data) => {
+                                                console.log("Pago aplicado");
+                                            })
+                                            .catch((error) => {
+                                                console.error("Error al aplicar el pago", error);
+                                        });
+                                     }
+                                                                     
                                 }
-
-                                timer = setTimeout(activarBoton, tiempoEspera);
-
                             }
 
-                            ///
                             
                             function regresar() {
                                 paymentHistory2024.style.display = "none";
@@ -1336,18 +1370,13 @@ function cerrarAdminPanel() {
     adminPanel.style.padding = "0px";
 }
 
-function onClick(e) {
-    e.preventDefault();
-    grecaptcha.enterprise.ready(async () => {
-      const token = await grecaptcha.enterprise.execute('6LdCILYpAAAAADl_Sm8WVoZTzGfv8RS_TiLLspJf', {action: 'formulario'});
-    });
-}
 
 document.getElementById("inicarsesionadmin").addEventListener("click", () => {
     const usuarioInput = document.getElementById("admin-username").value;
     const contraseñaInput = document.getElementById("admin-contrasena").value;
 
-    fetch("https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/admin")
+    const urlAdmin = `https://sheet.best/api/sheets/${sheetID}/tabs/admin`;
+    fetch(urlAdmin)
         .then((response) => response.json())
         .then((data) => {
             const correoCifradoInput = cifrarCorreo(usuarioInput);
@@ -1366,8 +1395,8 @@ document.getElementById("inicarsesionadmin").addEventListener("click", () => {
                     const contenedoradmin = document.getElementById("contenedoradmin");
                     contenedoradmin.style.display = "block";
                     homepage.style.display = "none";
-
-                    fetch("https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/propietarios")
+                    const urlProp = `https://sheet.best/api/sheets/${sheetID}/tabs/propietarios`;
+                    fetch(urlProp)
                     .then((response) => response.json())
                     .then((data) => {
 
@@ -1491,7 +1520,8 @@ function actualizarDato(valor, campo, domcodificado) {
         console.log("Campo:", campo);
         console.log("Índice:", domcodificado);
 
-        fetch("https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/propietarios")
+        const urlProp = `https://sheet.best/api/sheets/${sheetID}/tabs/propietarios`;
+        fetch(urlProp)
             .then((response) => response.json())
             .then((data) => {
                 const domcodificados = data.map((fila) => fila.dom);
@@ -1510,7 +1540,7 @@ function actualizarDato(valor, campo, domcodificado) {
                     [campo]: valorActualizado,
                 };
 
-                const url = `https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/propietarios/${indice}`;
+                const url = `https://sheet.best/api/sheets/${sheetID}/tabs/propietarios/${indice}`;
                 console.log("URL:", url);
                 // Realizar la solicitud PATCH para actualizar los datos
                 fetch(url, {
@@ -1616,7 +1646,7 @@ function agregarresidente () {
         console.log(newusarname);
         console.log(domcif);
 
-        const urlVerificacion = `https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/propietarios/dom/${(domcif)}`;
+        const urlVerificacion = `https://sheet.best/api/sheets/${sheetID}/tabs/propietarios/dom/${(domcif)}`;
         console.log(urlVerificacion);
 
         fetch(urlVerificacion)
@@ -1636,8 +1666,7 @@ function agregarresidente () {
                     cel: newcel,
                 };
 
-                const url = "https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/propietarios";
-
+                const url = `https://sheet.best/api/sheets/${sheetID}/tabs/propietarios`;
                 const opciones = {
                     method: "POST",
                     headers: {
@@ -1664,7 +1693,8 @@ function agregarresidente () {
                         }, 3000);
 
                         setTimeout(() => {
-                            fetch("https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/propietarios")
+                            const urlProp = `https://sheet.best/api/sheets/${sheetID}/tabs/propietarios`;
+                            fetch(urlProp)
                                 .then((response) => response.json())
                                 .then((data) => {
                                     generarTabla("garza-registros", data.filter((registro) => registro.dom.startsWith("IkdhcnphI")));
@@ -1723,7 +1753,8 @@ function cerrarAdminPanel2() {
 
 function eliminarRegistro(domcodificado){
     if (sesionIniciada) {
-        fetch("https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/propietarios")
+        const urlProp = `https://sheet.best/api/sheets/${sheetID}/tabs/propietarios`;
+        fetch(urlProp)
             .then((response) => response.json())
             .then((data) => {
                 const domcodificados = data.map((fila) => fila.dom);
@@ -1732,7 +1763,7 @@ function eliminarRegistro(domcodificado){
 
                 if (indice !== -1) {
                     // Realizar la solicitud DELETE para eliminar el registro
-                    const url = `https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/propietarios/${indice}`;
+                    const url = `https://sheet.best/api/sheets/${sheetID}/tabs/propietarios/${indice}`;
                     fetch(url, {
                         method: "DELETE",
                         mode: "cors",
@@ -1743,7 +1774,8 @@ function eliminarRegistro(domcodificado){
                         alert("Registro eliminado correctamente:");
 
                         setTimeout(() => {
-                            fetch("https://sheet.best/api/sheets/c42cf9f0-aad0-4079-ad6f-7baed9fc22f9/tabs/propietarios")
+                            const urlProp = `https://sheet.best/api/sheets/${sheetID}/tabs/propietarios`;
+                            fetch(urlProp)
                                 .then((response) => response.json())
                                 .then((data) => {
 
@@ -1848,6 +1880,6 @@ function actualizarHoras() {
 function onClick(e) {
     e.preventDefault();
     grecaptcha.enterprise.ready(async () => {
-      const token = await grecaptcha.enterprise.execute('6LcLXtYpAAAAAGb-FTuihdumnp4HmqdLVjwH-Qds', {action: 'LOGIN'});
+      const token = await grecaptcha.enterprise.execute('6LcLXtYpAAAAAGb-FTuihdumnp4HmqdLVjwH-Qds', {action: 'formulario'});
     });
 }
